@@ -28,12 +28,18 @@ public class UserController {
     public PagingResponse getAllUser(@RequestParam(defaultValue = "1") int page,
                                      @RequestParam(name = "item_per_page", defaultValue = "10") int itemPerPage){
 
-       PagingResponse pagingResponse = new PagingResponse(page, itemPerPage);
-
+        PagingResponse pagingResponse = new PagingResponse(page, itemPerPage);
         List<UsersResponse> usersResponseList  = new ArrayList<>();
-        usersResponseList.add(new UsersResponse(1, "User 1"));
-        usersResponseList.add(new UsersResponse(2, "User 2"));
-        usersResponseList.add(new UsersResponse(3, "User 3"));
+
+        //Get All
+        List<User> users = (List<User>) userRepository.findAll();
+        for (User user: users) {
+            usersResponseList.add(new UsersResponse(user.getId(), user.getName()));
+        }
+
+        //usersResponseList.add(new UsersResponse(1, "User 1"));
+        //usersResponseList.add(new UsersResponse(2, "User 2"));
+        //usersResponseList.add(new UsersResponse(3, "User 3"));
 
         pagingResponse.setUsersResponse(usersResponseList);
         return pagingResponse;
