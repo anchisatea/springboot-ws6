@@ -1,9 +1,6 @@
 package com.example.demo;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import  java.util.List;
@@ -26,8 +23,6 @@ public class UserController {
         return pagingResponse;
     }
 
-
-
     //@GetMapping("/users")
     //public String getPage(@RequestParam(required = false, defaultValue = "1") String page, @RequestParam(name = "item_per_page",required =false, defaultValue = "10") String itemPerPage){
     //    return "Page: " + page + ", itemPerPage: " + itemPerPage;
@@ -39,4 +34,8 @@ public class UserController {
         return new UsersResponse(id, "User " + id );
     }
 
+    @PostMapping("/users")
+    public UsersResponse createNewUser(@RequestBody NewUserRequest request){
+       return new UsersResponse(0, request.getName() + request.getAge());
+    }
 }
