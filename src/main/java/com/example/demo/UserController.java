@@ -35,7 +35,7 @@ public class UserController {
         //Get All
         List<User> users = (List<User>) userRepository.findAll();
         for (User user: users) {
-            usersResponseList.add(new UsersResponse(user.getId(), user.getName()));
+            usersResponseList.add(new UsersResponse(user.getId(), user.getName(), user.getAge()));
         }
 
         //usersResponseList.add(new UsersResponse(1, "User 1"));
