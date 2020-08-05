@@ -29,14 +29,12 @@ public class UserController {
 
     @GetMapping("/users")
     public PagingResponse getAllUser(@RequestParam(defaultValue = "1") int page,
-                                     @RequestParam(name = "item_per_page", defaultValue = "2") int itemPerPage){
+                                     @RequestParam(name = "item_per_page", defaultValue = "10") int itemPerPage){
 
         PagingResponse pagingResponse = new PagingResponse(page, itemPerPage);
         List<UsersResponse> usersResponseList  = new ArrayList<>();
 
         Page<User> users = userRepository.findAll(PageRequest.of(0, itemPerPage));
-        //Pageable pageable = PageRequest.of(page,itemPerPage);
-        //Iterable<User> users = userRepository.findAll(page);
         for(User user: users.getContent()) {
             usersResponseList.add(new UsersResponse(user.getId(),user.getName(), user.getAge()));
 
