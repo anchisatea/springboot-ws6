@@ -1,6 +1,8 @@
 package com.example.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.awt.*;
@@ -27,20 +29,24 @@ public class UserController {
 
     @GetMapping("/users")
     public PagingResponse getAllUser(@RequestParam(defaultValue = "1") int page,
-                                     @RequestParam(name = "item_per_page", defaultValue = "10") int itemPerPage){
+                                     @RequestParam(name = "item_per_page", defaultValue = "2") int itemPerPage){
 
         PagingResponse pagingResponse = new PagingResponse(page, itemPerPage);
         List<UsersResponse> usersResponseList  = new ArrayList<>();
 
-        //Get All
-        List<User> users = (List<User>) userRepository.findAll();
-        for (User user: users) {
-            usersResponseList.add(new UsersResponse(user.getId(), user.getName(), user.getAge()));
+        Page<User> users = userRepository.findAll(PageRequest.of(0, itemPerPage));
+        //Pageable pageable = PageRequest.of(page,itemPerPage);
+        //Iterable<User> users = userRepository.findAll(page);
+        for(User user: users.getContent()) {
+            usersResponseList.add(new UsersResponse(user.getId(),user.getName(), user.getAge()));
+
         }
 
-        //usersResponseList.add(new UsersResponse(1, "User 1"));
-        //usersResponseList.add(new UsersResponse(2, "User 2"));
-        //usersResponseList.add(new UsersResponse(3, "User 3"));
+        //Get All
+        //Iterable<User> users = userRepository.findAll();
+        //for (User user: users) {
+        //    usersResponseList.add(new UsersResponse(user.getId(), user.getName(), user.getAge()));
+        //}
 
         pagingResponse.setUsersResponse(usersResponseList);
         return pagingResponse;
@@ -55,12 +61,13 @@ public class UserController {
     @GetMapping("/users/{id}")
     public UsersResponse getUserById(@PathVariable int id){
         Optional<User> user = userRepository.findById(id);
-        return new UsersResponse(user.get().getId(), user.get() .getName() );
+        return new UsersResponse(user.get().getId(), user.get() .getName(), user.get().getAge() );
     }
 
 
     @PostMapping("/users1")
     public String createNewUserWithFormData(NewUserRequest request){
-       return request.getName() + request.getAge();
+
+        return request.getName() + request.getAge();
     }
 }
